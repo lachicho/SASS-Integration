@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+/* funciones */
+$font-stack:'Lato', sans-serif;
+$primary-color:white;
+$blue:#244F75;
+$green:#60BFBF;
+$purple:#8C4B7E;
+$yellow:#F8BB44;
+$red:#F24B4B;
+$size: 1rem;
+$bgcolor: background-color;
+$color_name: "blue","green","purple","yellow","red";
+$color: $blue, $green, $purple, $yellow,$red;
+$left: 0,20vw,40vw,60vw,80vw;
+$translate: (-100%, 0, 0),(0,100%, 0),(0,-100%, 0),(0,100%, 0),(100%, 0, 0);
+
+/*formato*/
+body {
+  font:100% $font-stack;
+  color: $primary-color;
+  box-sizing:border-box;
+  font-size: 1.5*$size;
+}
+
+.stripes {/*caja*/
+    width: 100vw;
+    min-height: 100vh;
+    text-align: center;
+    overflow:hidden; 
+    color:white;
+}
+
+@mixin stripe-style { /*mixins*/
+    width:20%;
+    min-height: 100vh;
+    overflow: hidden;
+    cursor: pointer;  
+    position: absolute;
+}   
+@mixin content-style {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .stripe { /*raya*/
+        @include stripe-style;
+        @include content-style; 
+        
+        &::before {
+            content: "";
+            position: absolute;
+            z-index:1;
+            top:0;
+            left: 0;
+            height: 100vh;
+            width:100%;
+            background: white;
+            opacity: 0.1;
+            -webkit-transform: skew(30deg) scaleY(1) translate(0, 0); 
+            transform: skew(30deg) scaleY(1) translate(0, 0); 
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        &:hover::before {
+            -webkit-transform: skew(0deg) scale(3) translate(0, 0);
+            transform: skew(0deg) scale(3) translate(0, 0);
+            opacity: 0.1;
+        }  
+
+        @for $i from 1 through 5 { /*creo @for para hacer loop de las 5 rayas con sus caracteristicas*/
+            
+                &.stripe-#{nth($color_name,$i)} {
+                    background-color: nth($color,$i);
+                    left: nth($left,$i);
+                    animation: color-#{nth($color_name,$i)} 1 + $i*0.1s forwards;   
+                }      
+            }
+    }
+/*creo @for para hacer las animaciones*/   
+@for $i from 1 through 5 {
+    @keyframes color-#{nth($color_name,$i)} {
+        
+        0% {
+            -webkit-transform: translate3d(#{nth($translate,$i)}); 
+            transform: translate3d(#{nth($translate,$i)});
+            animation-delay: $i*0.1s; 
+            -webkit-animation-delay: $i*0.1s;
+        }
+        100% {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+        }     
+    }      
+}
